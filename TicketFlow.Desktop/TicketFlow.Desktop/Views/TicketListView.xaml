@@ -1,0 +1,92 @@
+<UserControl x:Class="TicketFlow.Desktop.Views.TicketListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" Background="White">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Tickets" FontSize="28" FontWeight="Light" Foreground="#24292e"/>
+
+            <Button Grid.Column="1" Content="Create Ticket" Command="{Binding NavigateToCreateTicketCommand}" 
+                    Visibility="{Binding IsUserRole, Converter={StaticResource BoolToVis}}"
+                    Background="#2ea44f" Foreground="White" FontWeight="Bold" Padding="15,8" BorderThickness="0" Margin="0,0,10,0" Cursor="Hand"/>
+
+            <Button Grid.Column="2" Content="Refresh" Command="{Binding LoadTicketsCommand}" 
+                    Background="#fafbfc" Foreground="#24292e" FontWeight="SemiBold" BorderBrush="#e1e4e8" Padding="15,8" Cursor="Hand"/>
+        </Grid>
+
+        <!-- Error/Loading Messages -->
+        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="#cb2431" Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}" Margin="0,0,0,10"/>
+        <TextBlock Grid.Row="1" Text="Loading tickets..." Foreground="#586069" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" Margin="0,0,0,10"/>
+
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Tickets}" AutoGenerateColumns="False" 
+                  IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single"
+                  Background="White" RowBackground="White" AlternatingRowBackground="#f6f8fa"
+                  BorderBrush="#e1e4e8" HorizontalGridLinesBrush="#e1e4e8" VerticalGridLinesBrush="Transparent">
+
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#f6f8fa"/>
+                    <Setter Property="Foreground" Value="#24292e"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="BorderBrush" Value="#e1e4e8"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding TicketNumber}" Width="100"/>
+                <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" Width="*"/>
+                <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" Width="100"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120"/>
+                <DataGridTextColumn Header="Assigned To" Binding="{Binding AssignedToName}" Width="150"/>
+                <DataGridTextColumn Header="Created" Binding="{Binding CreatedAt, StringFormat='MMM dd, yyyy HH:mm'}" Width="150"/>
+                
+                <DataGridTemplateColumn Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="View Details" 
+                                    Command="{Binding DataContext.ViewTicketDetailCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding Id}"
+                                    Cursor="Hand" Background="Transparent" Foreground="#0366d6" BorderThickness="0" FontWeight="SemiBold"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

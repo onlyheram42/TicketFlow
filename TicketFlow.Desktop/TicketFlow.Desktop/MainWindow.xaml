@@ -5,8 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TicketFlow.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="TicketFlow - Customer Support" 
+        Height="{Binding WindowHeight, Mode=TwoWay}" Width="{Binding WindowWidth, Mode=TwoWay}"
+        ResizeMode="{Binding WindowResizeMode}"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid Background="#f0f2f5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Top Navigation Bar (Visible only when logged in) -->
+        <Border Grid.Row="0" Background="#ffffff" BorderBrush="#e1e4e8" BorderThickness="0,0,0,1" Padding="20,10"
+                Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="TicketFlow" FontSize="20" FontWeight="Bold" Foreground="#0366d6" VerticalAlignment="Center"/>
+                
+                <TextBlock Grid.Column="1" Text="{Binding UserNameDisplay}" Margin="0,0,15,0" VerticalAlignment="Center" Foreground="#24292e"/>
+                
+                <Button Grid.Column="2" Content="Logout" Command="{Binding LogoutCommand}" 
+                        Padding="15,5" Background="#fafbfc" BorderBrush="#e1e4e8" Cursor="Hand"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>

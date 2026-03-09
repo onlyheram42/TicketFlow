@@ -2,8 +2,26 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TicketFlow.Desktop"
+             xmlns:views="clr-namespace:TicketFlow.Desktop.Views"
+             xmlns:converters="clr-namespace:TicketFlow.Desktop.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:InternalCommentBgConverter x:Key="InternalCommentBgConverter"/>
+
+        <DataTemplate DataType="{x:Type local:ViewModels.LoginViewModel}">
+            <views:LoginView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ViewModels.TicketListViewModel}">
+            <views:TicketListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ViewModels.CreateTicketViewModel}">
+            <views:CreateTicketView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ViewModels.TicketDetailViewModel}">
+            <views:TicketDetailView />
+        </DataTemplate>
     </Application.Resources>
 </Application>
